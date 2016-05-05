@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.ncfxy.FaultLocalization.methods.FaultLocalizationMethod;
+import com.ncfxy.FaultLocalization.methods.Ochiai;
 import com.ncfxy.FaultLocalization.methods.Tarantula;
 
 public class DealWithOneExperiment {
@@ -21,6 +22,12 @@ public class DealWithOneExperiment {
 		FaultLocalizationMethod method = new Tarantula();
 		List<Double> list = method.getSuspicious(experiment);
 		System.out.println(list.toString());
+		method = new Ochiai();
+		List<Double> list1 = method.getSuspicious(experiment);
+		System.out.println(list.toString());
+		for (int i = 0;i < list.size();i++){
+			System.out.println(list.get(i)+ ", " + list1.get(i));
+		}
 	}
 
 }
