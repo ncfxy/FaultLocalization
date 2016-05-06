@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.ncfxy.FaultLocalization.methods.FaultLocalizationMethod;
-import com.ncfxy.FaultLocalization.methods.Ochiai;
-import com.ncfxy.FaultLocalization.methods.Tarantula;
+import com.ncfxy.FaultLocalization.methods.statistics.Ochiai;
+import com.ncfxy.FaultLocalization.methods.statistics.Tarantula;
 
 public class DealWithOneExperiment {
 
