@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.ncfxy.FaultLocalization.methods.FaultLocalizationMethod;
+import com.ncfxy.FaultLocalization.methods.other.LinearApproachMultipleFaults;
 import com.ncfxy.FaultLocalization.methods.statistics.Ochiai;
 import com.ncfxy.FaultLocalization.methods.statistics.Tarantula;
 
@@ -25,9 +26,12 @@ public class DealWithOneExperiment {
 		method = new Ochiai();
 		List<Double> list1 = method.getSuspicious(experiment);
 		System.out.println(list.toString());
+		
 		for (int i = 0;i < list.size();i++){
-			System.out.println(list.get(i)+ ", " + list1.get(i));
+			System.out.println(i + "行 -----Tarantula: " + list.get(i)+ ", Ochiai: " + list1.get(i));
 		}
+		method = new LinearApproachMultipleFaults();
+		method.getSuspicious(experiment);
 	}
 
 }

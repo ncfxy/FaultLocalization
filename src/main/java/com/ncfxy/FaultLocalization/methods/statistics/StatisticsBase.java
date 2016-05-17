@@ -7,11 +7,11 @@ import com.ncfxy.FaultLocalization.Experiment;
 import com.ncfxy.FaultLocalization.methods.FaultLocalizationMethod;
 
 public abstract class StatisticsBase implements FaultLocalizationMethod {
-	int totalFailed;
-	int totalPassed;
-	List<Integer> failed = new ArrayList<Integer>();
-	List<Integer> passed = new ArrayList<Integer>();
-	List<Double> result = new ArrayList<Double>();
+	protected int totalFailed;
+	protected int totalPassed;
+	protected List<Integer> failed = new ArrayList<Integer>();
+	protected List<Integer> passed = new ArrayList<Integer>();
+	protected List<Double> result = new ArrayList<Double>();
 	
 	protected void init(Experiment experiment) {
 		totalFailed = experiment.getFailCoverageMatrix().size();

@@ -85,7 +85,7 @@ public class Experiment {
 				failCoverageMatrix.add(listTmp);
 			}
 		}
-		System.out.println(coverageMatrix.toString());
+		//System.out.println(coverageMatrix.toString());
 	}
 
 	public String getVersion() {
