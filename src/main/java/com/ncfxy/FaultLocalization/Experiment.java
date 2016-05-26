@@ -13,7 +13,7 @@ public class Experiment {
 	private String basePath;
 	private String programName;
 	private String version; // v1、v2、v3
-	private String coverageFileName = "coverage_matrix.txt";
+	private String coverageFileName = "output102.txt";
 
 	private String versionName;
 	private Integer numberOfTestCases;// NOTS;
@@ -21,6 +21,7 @@ public class Experiment {
 	private Integer numberOfExecutableEntities;// NOES;
 	private Integer numberOfFaults; // NOF_
 	private List<Integer> locationsOfFaults; // LOFS
+	private List<Integer> indexOfFaults;
 	private List<List<Byte>> coverageMatrix;
 	private List<List<Byte>> passCoverageMatrix;
 	private List<List<Byte>> failCoverageMatrix;
@@ -31,6 +32,15 @@ public class Experiment {
 		this.basePath = basePath;
 		this.programName = programName;
 		this.version = version;
+	}
+	
+	public boolean isFaultLine(Integer i){
+		for(Integer x : indexOfFaults){
+			if(x.equals(i)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void readInfoFromFile() throws FileNotFoundException {
@@ -56,8 +66,11 @@ public class Experiment {
 		tmp = lines.get(5).substring(7);
 		String tmps2[] = tmp.split(" ");
 		locationsOfFaults = new ArrayList<Integer>();
+		indexOfFaults = new ArrayList<Integer>();
 		for (String s : tmps2) {
-			locationsOfFaults.add(Integer.parseInt(s));
+			int tempInt = Integer.parseInt(s);
+			locationsOfFaults.add(tempInt);
+			indexOfFaults.add(findFirstLessEqualThan(tempInt));
 		}
 		coverageMatrix = new ArrayList<List<Byte>>();
 		passCoverageMatrix = new ArrayList<List<Byte>>();
@@ -85,7 +98,96 @@ public class Experiment {
 				failCoverageMatrix.add(listTmp);
 			}
 		}
-		//System.out.println(coverageMatrix.toString());
+		// System.out.println(coverageMatrix.toString());
+	}
+
+	public void compressMatrix() {
+//		outputMatrix(coverageMatrix);
+		int matrixLines = coverageMatrix.size();
+		int matrixColumns = coverageMatrix.get(0).size();
+		int coIndex = 0;
+		while (coIndex < matrixColumns - 1) {
+			boolean same = true;
+			for (int lineIndex = 0; lineIndex < matrixLines; lineIndex++) {
+				if (!coverageMatrix.get(lineIndex).get(coIndex)
+						.equals(coverageMatrix.get(lineIndex).get(coIndex + 1))) {
+					same = false;
+					break;
+				}
+			}
+			if (same) {
+				for (int lineIndex = 0; lineIndex < matrixLines; lineIndex++) {
+					coverageMatrix.get(lineIndex).remove(coIndex + 1);
+				}
+				locationsOfExecutableEntities.remove(coIndex + 1);
+				matrixColumns--;
+			} else {
+				coIndex++;
+			}
+		}
+		numberOfExecutableEntities = coverageMatrix.get(0).size();
+		indexOfFaults = new ArrayList<>();
+		for(int i = 0;i < locationsOfFaults.size();i++){
+			indexOfFaults.add(findFirstLessEqualThan(locationsOfFaults.get(i)));
+		}
+//		outputMatrix(coverageMatrix);
+	}
+
+	private Integer findFirstLessEqualThan(Integer x) {
+		for (Integer i = 0; i < locationsOfExecutableEntities.size(); i++) {
+			if (locationsOfExecutableEntities.get(i) > x) {
+				return i - 1;
+			}
+		}
+		return locationsOfExecutableEntities.size() - 1;
+	}
+
+	private void outputMatrix(List<List<Byte>> m) {
+		for (int i = 0; i < m.size(); i++) {
+			for (int j = 0; j < m.get(0).size(); j++) {
+				System.out.print(m.get(i).get(j));
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("#Ver_# " + programName + "_" + version + "\n");
+		buffer.append("#NOTS# " + numberOfTestCases + "\n");
+		buffer.append("#NOES# " + numberOfExecutableEntities + "\n");
+		buffer.append("#NOF_# " + numberOfFaults + "\n");
+		buffer.append("#LOFS#");
+		for (Integer i = 0; i < locationsOfFaults.size(); i++) {
+			buffer.append(" " + findFirstLessEqualThan(locationsOfFaults.get(i)));
+			
+		}
+		buffer.append("\n");
+		buffer.append("#LOES#");
+		for (Integer i = 0; i < locationsOfExecutableEntities.size(); i++) {
+			buffer.append(" " + toFiveLengthString(locationsOfExecutableEntities.get(i)));
+		}
+		buffer.append("\n");
+		
+		for (Integer i = 1; i <= coverageMatrix.size(); i++) {
+			buffer.append("#CASE#" + toFiveLengthString(i) + "#R" + (resultVector.get(i - 1) == true ? 0 : 1) + "#");
+			for (int j = 0; j < coverageMatrix.get(i - 1).size(); j++) {
+				buffer.append(" " + coverageMatrix.get(i - 1).get(j));
+			}
+			buffer.append("\n");
+		}
+//		System.out.println(buffer.toString());
+
+		return buffer.toString();
+	}
+
+	private String toFiveLengthString(Integer a) {
+		String str = a.toString();
+		while (str.length() < 5) {
+			str = "0" + str;
+		}
+		return str;
 	}
 
 	public String getVersion() {
