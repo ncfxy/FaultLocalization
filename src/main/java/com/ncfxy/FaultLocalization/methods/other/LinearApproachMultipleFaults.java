@@ -20,9 +20,8 @@ import com.ncfxy.FaultLocalization.methods.statistics.StatisticsBase;
 public class LinearApproachMultipleFaults extends StatisticsBase {
 
 	private List<Integer> bestSolution = new ArrayList<Integer>();
-
-	@Override
-	public List<Double> getSuspicious(Experiment experiment) {
+	
+	public List<Integer> getResult(Experiment experiment, List OchiaiResult){
 		init(experiment);
 		List<Double> f = new ArrayList<Double>();
 		List<Double> p = new ArrayList<Double>();
@@ -41,7 +40,7 @@ public class LinearApproachMultipleFaults extends StatisticsBase {
 		}
 		Double left = 0.0;
 		Double right = A;
-		while (right - left > 0.00001) {
+		while (right - left > 0.0001) {
 			lamude = (left + right) / 2;
 			Double tmp = cal(getParameters(f, p, lamude), experiment);
 			// lamude is too large
@@ -54,6 +53,11 @@ public class LinearApproachMultipleFaults extends StatisticsBase {
 		System.out.println("Linear Approach : ");
 		System.out.println("lamude = " + lamude);
 		System.out.println("bestSolution : " + bestSolution.toString());
+		return null;
+	} 
+
+	@Override
+	public List<Double> getSuspicious(Experiment experiment) {
 		return null;
 	}
 
@@ -95,6 +99,9 @@ public class LinearApproachMultipleFaults extends StatisticsBase {
 		}
 	}
 
+	/**
+	 * 计算parameters下的可疑值
+	 */
 	private Double cal(List<Double> parameters, Experiment experiment) {
 		Double EndResult = -999999999.0;
 		class Temp {
@@ -109,10 +116,8 @@ public class LinearApproachMultipleFaults extends StatisticsBase {
 			t.list.add(new Integer(i));
 			String coverString = getCoverString(experiment, t.list);
 			Double result = 0.0;
-			for (int j = 0; j < coverString.length(); j++) {
-				if ((coverString.charAt(j)) == '1') {
-					result += parameters.get(j);
-				}
+			for(int j = 0;j < t.list.size();j++){
+				result += parameters.get(t.list.get(j));
 			}
 			if (coverAll(coverString)) {
 				if (result > EndResult) {

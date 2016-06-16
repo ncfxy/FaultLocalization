@@ -23,7 +23,7 @@ public class SaveToJSON {
 			Gson gson = new Gson();
 			gson = new GsonBuilder().setPrettyPrinting().create();
 			String jsonString = gson.toJson(map);
-			System.out.println(jsonString);
+			//System.out.println(jsonString);
 			output.write(jsonString.getBytes());
 		}
 	}
@@ -44,7 +44,10 @@ public class SaveToJSON {
 			List<Map<String,List>> mapList = (List<Map<String,List>>)list;
 			StringBuffer outputFirstBuffer = new StringBuffer();
 			outputFirstBuffer.append("Tarantula,");
-			outputFirstBuffer.append("Ochiai\n");
+			outputFirstBuffer.append("Ochiai,");
+			outputFirstBuffer.append("OP2,");
+			outputFirstBuffer.append("GAMFal,");
+			outputFirstBuffer.append("GAMFalLinear\n");
 			StringBuffer outputLastBuffer = new StringBuffer();
 			outputLastBuffer.append(outputFirstBuffer);
 			for(Map<String,List> map : mapList){
@@ -52,6 +55,15 @@ public class SaveToJSON {
 				outputFirstBuffer.append(tmp.get(0)+",");
 				outputLastBuffer.append(tmp.get(1)+",");
 				tmp = map.get("Ochiai");
+				outputFirstBuffer.append(tmp.get(0)+",");
+				outputLastBuffer.append(tmp.get(1)+",");
+				tmp = map.get("OP2");
+				outputFirstBuffer.append(tmp.get(0)+",");
+				outputLastBuffer.append(tmp.get(1)+",");
+				tmp = map.get("GAMFal");
+				outputFirstBuffer.append(tmp.get(0)+",");
+				outputLastBuffer.append(tmp.get(1)+",");
+				tmp = map.get("GAMFalLinear");
 				outputFirstBuffer.append(tmp.get(0)+"\n");
 				outputLastBuffer.append(tmp.get(1)+"\n");
 			}

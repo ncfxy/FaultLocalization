@@ -12,5 +12,7 @@ public interface FaultLocalizationMethod {
 	 * @return
 	 */
 	public List<Double> getSuspicious(Experiment experiment);
+	
+	public List<Integer> getResult(Experiment experiment);
 
 }
